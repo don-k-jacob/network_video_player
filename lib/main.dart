@@ -42,6 +42,7 @@ class _HomeState extends State<Home> {
   }
   @override
   Widget build(BuildContext context) {
+    get();
     return Scaffold(
       backgroundColor: Color(0xff1E1F28),
       body: SafeArea(
@@ -97,22 +98,25 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 10,
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
+                            Container(
+                              width: 200,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
 
-                                Text("Title:\n ${data.elementAt(index).title}",style: TextStyle(
-                                 color: Colors.white,
-                                  fontSize: 15
-                                ),),
-
-                                Text("SubTitle:\n ${data.elementAt(index).subtitle}",style: TextStyle(
-                                    color: Colors.white,
+                                  Text("${data.elementAt(index).title}",style: TextStyle(
+                                   color: Colors.white,
                                     fontSize: 15
-                                ),),
+                                  ),),
 
-                              ],
+                                  Text("${data.elementAt(index).subtitle}",style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15
+                                  ),),
+
+                                ],
+                              ),
                             )
                           ],
                         ),

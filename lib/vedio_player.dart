@@ -89,7 +89,10 @@ class _PlayerState extends State<Player> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(data.title,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
-                Text(data.subtitle),
+                Text(data.subtitle,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
+                SizedBox(
+                  height: 50,
+                ),
                 Text(data.description),
               ],
             ),
