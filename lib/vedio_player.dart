@@ -91,6 +91,25 @@ class _PlayerState extends State<Player> {
             Row(
               children: <Widget>[
                 IconButton(icon:  Icon(
+                  Icons.skip_previous
+                  ,size: 30,
+                ),onPressed: (){
+                  setState(() {
+                    _controller.pause();
+                    if(data_.elementAt(ind).title==data.title)
+                    {
+                      ind=(ind==0)?data_.length-1:ind-1;
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(ind),)));
+                    }
+                    else
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(ind),)));
+
+                  });
+                },),
+                SizedBox(
+                  width: 5,
+                ),
+                IconButton(icon:  Icon(
                   _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,size: 30,
                 ),onPressed: (){
                   setState(() {
@@ -112,10 +131,13 @@ class _PlayerState extends State<Player> {
                 ),onPressed: (){
                   setState(() {
                     _controller.pause();
-                    if(data_.elementAt(0).title==data.title)
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(1),)));
+                    if(data_.elementAt(ind).title==data.title)
+                      {
+                        ind=(ind==(data_.length-1))?0:ind+1;
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(ind),)));
+                      }
                     else
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(0),)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(ind),)));
 
                   });
                 },),

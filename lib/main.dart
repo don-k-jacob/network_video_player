@@ -4,7 +4,7 @@ import 'package:networkvideos/Networking/data.dart';
 
 import 'package:networkvideos/vedio_player.dart';
 
-
+int ind=0;
 void main() => runApp(MyApp());
 //File jsonFile=new File('assets/data.json');
 class MyApp extends StatefulWidget {
