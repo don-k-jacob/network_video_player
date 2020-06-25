@@ -112,7 +112,11 @@ class _PlayerState extends State<Player> {
                 ),onPressed: (){
                   setState(() {
                     _controller.pause();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(0),)));
+                    if(data_.elementAt(0).title==data.title)
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(1),)));
+                    else
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(0),)));
+
                   });
                 },),
                 Spacer(),
