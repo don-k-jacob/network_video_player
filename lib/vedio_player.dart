@@ -1,4 +1,6 @@
+import 'package:flutter/services.dart';
 import 'package:networkvideos/Networking/data.dart';
+import 'package:networkvideos/main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +39,7 @@ class _PlayerState extends State<Player> {
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
 
@@ -46,79 +49,179 @@ class _PlayerState extends State<Player> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: (MediaQuery.of(context).orientation != Orientation.landscape)?AppBar(
         title: Text(data.title),
-      ),
+      ):null,
       // Use a FutureBuilder to display a loading spinner while waiting for the
       // VideoPlayerController to finish initializing.
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                // If the VideoPlayerController has finished initialization, use
-                // the data it provides to limit the aspect ratio of the video.
-                return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  // Use the VideoPlayer widget to display the video.
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      VideoPlayer(_controller),
-                      _PlayPauseOverlay(controller: _controller,onTap: (){
-                        setState(() {
-                          _controller.value.isPlaying ? _controller.pause() : _controller.play();
-                        });
-                      },),
-                      VideoProgressIndicator(_controller, allowScrubbing: true),
-                    ],
-                  ),
-                );
-              } else {
-                // If the VideoPlayerController is still initializing, show a
-                // loading spinner.
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FutureBuilder(
+              future: _initializeVideoPlayerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the VideoPlayerController has finished initialization, use
+                  // the data it provides to limit the aspect ratio of the video.
+                  return AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    // Use the VideoPlayer widget to display the video.
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        VideoPlayer(_controller,),
+
+                        _PlayPauseOverlay(controller: _controller,onTap: (){
+                          setState(() {
+                            _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                          });
+                        },),
+                        VideoProgressIndicator(_controller, allowScrubbing: true),
+                      ],
+                    ),
+                  );
+                } else {
+                  // If the VideoPlayerController is still initializing, show a
+                  // loading spinner.
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            Row(
               children: <Widget>[
-                Text(data.title,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
-                Text(data.subtitle,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
+                IconButton(icon:  Icon(
+                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,size: 30,
+                ),onPressed: (){
+                  setState(() {
+                    // If the video is playing, pause it.
+                    if (_controller.value.isPlaying) {
+                      _controller.pause();
+                    } else {
+                      // If the video is paused, play it.
+                      _controller.play();
+                    }
+                  });
+                },),
                 SizedBox(
-                  height: 50,
+                  width: 5,
                 ),
-                Text(data.description),
+                IconButton(icon:  Icon(
+                  Icons.skip_next
+                  ,size: 30,
+                ),onPressed: (){
+                  setState(() {
+                    _controller.pause();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(0),)));
+                  });
+                },),
+                Spacer(),
+                IconButton(icon: Icon(Icons.fullscreen,size: 30,),onPressed: (){
+                  (MediaQuery.of(context).orientation == Orientation.landscape)?
+                  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]):
+                  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+                }),
               ],
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(data.title,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
+                  Text(data.subtitle,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Color(0xffffffff)),),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Text(data.description),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView.separated(
+                padding: const EdgeInsets.all(8),
+                itemCount: data_.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  if(data_.elementAt(index).title==data.title)
+                    return SizedBox();
+                  return GestureDetector(
+                    onTap: (){
+                      _controller.pause();
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(index),)));
+                    },
+                    child: Container(
+                      color: Color(0xff2A2C36),
+                      height: 100,
+                      width: 300,
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 100,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              image: DecorationImage(image: NetworkImage(data_.elementAt(index).thumb),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 200,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
 
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Wrap the play or pause in a call to `setState`. This ensures the
-          // correct icon is shown.
-          setState(() {
-            // If the video is playing, pause it.
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              // If the video is paused, play it.
-              _controller.play();
-            }
-          });
-        },
-        // Display the correct icon depending on the state of the player.
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                Text("${data_.elementAt(index).title}",style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15
+                                ),),
+
+                                Text("${data_.elementAt(index).subtitle}",style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15
+                                ),),
+
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) => const Divider(),
+              ),
+            )
+          ],
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: () {
+//          // Wrap the play or pause in a call to `setState`. This ensures the
+//          // correct icon is shown.
+//          setState(() {
+//            // If the video is playing, pause it.
+//            if (_controller.value.isPlaying) {
+//              _controller.pause();
+//            } else {
+//              // If the video is paused, play it.
+//              _controller.play();
+//            }
+//          });
+//        },
+//        // Display the correct icon depending on the state of the player.
+//        child: Icon(
+//          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//        ),
+//      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

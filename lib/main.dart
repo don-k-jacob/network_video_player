@@ -21,28 +21,33 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-List<Data> data = List<Data>();
+List<Data> data_ = List<Data>();
 Data _data=Data();
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 void get()async{
+
   var dta=await _data.getData();
-  data=await parseJosn(dta);
-  print(data);
+  data_=await parseJosn(dta);
+  print(data_);
 }
 class _HomeState extends State<Home> {
   @override
   void initState() {
-    get();
+    setState(() {
+      get();
+    });
 //    data = parseJosn(jsonFile.readAsStringSync());
     // TODO: implement initState
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    get();
+    setState(() {
+      get();
+    });
     return Scaffold(
       backgroundColor: Color(0xff1E1F28),
       body: SafeArea(
@@ -63,22 +68,26 @@ class _HomeState extends State<Home> {
                   ),
                   ),
                   Spacer(),
-                  IconButton(icon: Icon(Icons.search,color: Color(0xffF7F7F7),), onPressed: (){}),
+                  IconButton(icon: Icon(Icons.refresh,color: Color(0xffF7F7F7),), onPressed: (){
+                    setState(() {
+                      get();
+                    });
+                  }),
                 ],
               ),
               SizedBox(
                 height: 30,
               ),
               Container(
-                height: MediaQuery.of(context).size.height/1.3,
+                height: MediaQuery.of(context).size.height/1.25,
                 child: ListView.separated(
                   padding: const EdgeInsets.all(8),
-                  itemCount: data.length,
+                  itemCount: data_.length,
 
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data.elementAt(index),)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Player(data: data_.elementAt(index),)));
                       },
                       child: Container(
                         color: Color(0xff2A2C36),
@@ -91,7 +100,7 @@ class _HomeState extends State<Home> {
                               width: 150,
                               decoration: BoxDecoration(
                                 color: Colors.black,
-                                image: DecorationImage(image: NetworkImage(data.elementAt(index).thumb),
+                                image: DecorationImage(image: NetworkImage(data_.elementAt(index).thumb),
                                 fit: BoxFit.cover),
                               ),
                             ),
@@ -105,12 +114,12 @@ class _HomeState extends State<Home> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
 
-                                  Text("${data.elementAt(index).title}",style: TextStyle(
+                                  Text("${data_.elementAt(index).title}",style: TextStyle(
                                    color: Colors.white,
                                     fontSize: 15
                                   ),),
 
-                                  Text("${data.elementAt(index).subtitle}",style: TextStyle(
+                                  Text("${data_.elementAt(index).subtitle}",style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15
                                   ),),
