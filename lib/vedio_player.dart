@@ -95,6 +95,7 @@ class _PlayerState extends State<Player> {
                   ,size: 30,
                 ),onPressed: (){
                   setState(() {
+
                     _controller.pause();
                     if(data_.elementAt(ind).title==data.title)
                     {
