@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29ef9cb6-d995-4f1e-98b5-dddb5b285a87" name="Default Changelist" comment="" />
+    <list default="true" id="29ef9cb6-d995-4f1e-98b5-dddb5b285a87" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ios/Debug-iphonesimulator/Runner.app/Runner" beforeDir="false" afterPath="$PROJECT_DIR$/build/ios/Debug-iphonesimulator/Runner.app/Runner" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/ios/Debug-iphonesimulator/video_player/video_player.framework/video_player" beforeDir="false" afterPath="$PROJECT_DIR$/build/ios/Debug-iphonesimulator/video_player/video_player.framework/video_player" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +150,7 @@
       <window_info anchor="bottom" id="Dart Analysis" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="TODO" />
-      <window_info active="true" anchor="bottom" id="Run" visible="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Run" visible="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Debug" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
@@ -155,7 +159,7 @@
       <window_info anchor="right" id="Flutter Inspector" />
       <window_info anchor="right" id="Flutter Outline" />
       <window_info anchor="right" id="Palette&#9;" />
-      <window_info anchor="right" id="Flutter Performance" />
+      <window_info anchor="right" id="Flutter Performance" weight="0.3297568" />
     </layout>
   </component>
   <component name="editorHistoryManager">
